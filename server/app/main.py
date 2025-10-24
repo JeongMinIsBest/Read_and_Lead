@@ -11,8 +11,10 @@ from .routers import stats as stats_router
 from .routers import culture as culture_router
 from .routers import kopis as kopis_router
 from .routers import uploads as uploads_router
+from .routers import tour as tour_router
 from .routers import agency_trips as agency_trips_router
 from .routers import places as places_router
+from .routers import debug as debug_router
 from fastapi.staticfiles import StaticFiles
 from fastapi import Response
 from .routers import trips as trips_router
@@ -50,6 +52,14 @@ allow_all = os.getenv("ALLOW_ALL_ORIGINS", "").strip().lower() in {"1", "true", 
 
 allowed_origins = [o.strip() for o in allowed_origins_env.split(",") if o.strip()] if allowed_origins_env else []
 
+# Sensible defaults: allow common localhost origins if nothing configured
+if not allow_all and not allowed_origin_regex and not allowed_origins:
+    allowed_origins = [
+        "http://localhost",
+        "http://localhost:3000",
+        "http://127.0.0.1:3000",
+    ]
+
 cors_kwargs = dict(
     allow_credentials=True,
     allow_methods=["*"],
@@ -57,15 +67,30 @@ cors_kwargs = dict(
 )
 
 if allow_all:
-    # 와일드카드 사용 시 브라우저 정책상 credentials 를 허용할 수 없음
-    cors_kwargs.update(allow_origins=["*"], allow_credentials=False)
+    # With wildcard, browsers disallow credentials
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=["*"],
+        allow_methods=["*"],
+        allow_headers=["*"],
+        allow_credentials=False,
+    )
 elif allowed_origin_regex:
-    cors_kwargs.update(allow_origin_regex=allowed_origin_regex, allow_origins=[])
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origin_regex=allowed_origin_regex,
+        allow_methods=["*"],
+        allow_headers=["*"],
+        allow_credentials=True,
+    )
 else:
-    # 명시된 오리진만 허용. 미설정 시 교차 출처는 모두 차단(동일 출처는 CORS 비대상)
-    cors_kwargs.update(allow_origins=allowed_origins)
-
-app.add_middleware(CORSMiddleware, **cors_kwargs)
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=allowed_origins,
+        allow_methods=["*"],
+        allow_headers=["*"],
+        allow_credentials=True,
+    )
 
 # Optional: background prewarm of lightweight endpoints to mitigate cold starts
 @app.on_event("startup")
@@ -132,6 +157,7 @@ app.include_router(culture_router.router, prefix="/api/culture", tags=["culture"
 app.include_router(kopis_router.router, prefix="/api/kopis", tags=["kopis"])  # /api/kopis/perform
 app.include_router(uploads_router.router, prefix="/api", tags=["uploads"])  # /api/uploads
 app.include_router(agency_trips_router.router, prefix="/api/agency-trips", tags=["agency-trips"])  # /api/agency-trips/list
+app.include_router(tour_router.router, prefix="/api/tour", tags=["tour"])  # /api/tour/search
 
 # static mount for uploaded files
 STATIC_DIR = os.path.join(os.path.dirname(__file__), "static")
@@ -144,6 +170,7 @@ def ping():
 
 app.include_router(trips_router.router, prefix="/api/trips", tags=["trips"])
 app.include_router(places_router.router, prefix="/api", tags=["places"])  # /api/places/upsert
+app.include_router(debug_router.router, prefix="/api/debug", tags=["debug"])  # /api/debug/diag
 
 # Root 안내: 기본 URL 접속 시 간단 안내를 반환
 @app.get("/")
