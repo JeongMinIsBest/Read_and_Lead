@@ -106,9 +106,7 @@ Read & Lead는 문학 작품을 출발점으로 여행지·여행 코스·문화
 <br/>
 
 ## 🏗️ 프로젝트 구조
-
 ```
-```text
 Read & Lead
 ├─ react-frontend/                             # 프론트엔드 앱(React CRA)
 │  ├─ public/
