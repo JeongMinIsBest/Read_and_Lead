@@ -77,7 +77,6 @@ Read & Lead proposes a new cultural tourism model that follows the flow: ```Lite
 <br/>
 
 ## 🧠 Service Differentiation
-
 - **Travel Starting from Literature**  
   - A book-centered exploration structure rather than a place-centered one.
 
@@ -96,7 +95,6 @@ Read & Lead proposes a new cultural tourism model that follows the flow: ```Lite
 <br/>
 
 ## 🗺️ Public Data & APIs Utilized
-
 - Korea Tourism Organization TourAPI  
 - National Library of Korea OPEN API (Book metadata, librarian recommendations)  
 - KOPIS Performance Information API  
