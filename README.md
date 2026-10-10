@@ -1,4 +1,4 @@
-# 📚 Read & Lead
+# 📚 Read & Lead | A Theme-Based Travel & Cultural Experience Platform Inspired by Literary Works
 A Theme-Based Travel & Cultural Experience Platform Inspired by Literary Works
   
 > Expanding the experience of reading books into the experience of walking through cities.
