@@ -1,6 +1,4 @@
 # 📚 Read & Lead | A Theme-Based Travel & Cultural Experience Platform Inspired by Literary Works
-A Theme-Based Travel & Cultural Experience Platform Inspired by Literary Works
-  
 > Expanding the experience of reading books into the experience of walking through cities.
   
 Read & Lead is a literature-based theme travel and sharing platform that connects literary works with travel destinations, travel routes, and cultural content.  
